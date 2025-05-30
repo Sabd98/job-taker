@@ -1,3 +1,5 @@
+import axios from "axios";
+
 let timer;
 
 export default {
@@ -19,38 +21,33 @@ export default {
       "http://localhost:3000/login";
 
     if (mode === "signup") {
-      url = "http://localhost:3000/add";
+      url = "http://localhost:3000/register";
     }
-    console.log(payload,'payload')
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    const response = await axios.post(
+      url,
+      {
         email: payload.email,
         name: payload.name,
         password: payload.password,
         role: payload.role || "jobseeker",
-      }),
-    });
-    console.log(response)
-    const responseData = await response.json();
-    console.log(responseData);
+      }
+    );
+    const responseData = await response.data;
 
-    if (!response.ok) {
-      const error = new Error(
-        responseData.message || "Failed to authenticate. Check your login data."
-      );
-      throw error;
-    }
+    // if (response.status !== 201) {
+    //   const error = new Error(
+    //     responseData.message || "Failed to authenticate. Check your login data."
+    //   );
+    //   throw error;
+    // }
 
     const expiresIn = 24 * 60 * 60 * 1000; // 1 hari (sesuaikan dengan backend)
     // const expiresIn = 5000;
     const expirationDate = new Date().getTime() + expiresIn;
 
+ 
     localStorage.setItem("token", responseData.token);
-    localStorage.setItem("userId", responseData.userId);
+    localStorage.setItem("userId", responseData.userId); 
     localStorage.setItem("userRole", responseData.role);
     localStorage.setItem("tokenExpiration", expirationDate);
 

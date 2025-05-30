@@ -1,25 +1,25 @@
+import axios from "axios";
+
 export default {
   async applyJob(context, payload) {
-    const newRequest = {
-      jobId: payload.jobId,
-      userId: payload.userId,
-      message: payload.message,
-    };
-
-    const response = await fetch(
+    const response = await axios.post(
       `http://localhost:3000/request/${payload.jobId}`,
       {
-        method: "POST",
-        body: JSON.stringify(newRequest),
+        jobId: payload.jobId,
+        userId: payload.userId,
+        message: payload.message,
+      },
+      // body: JSON.stringify(newRequest),
+      {
         headers: {
-          "Content-Type": "application/json",
+          // "Content-Type": "application/json",
           Authorization: `Bearer ${context.rootState.auth.token}`,
         },
       }
     );
-    const responseData = await response.json();
+    const responseData = await response.data;
 
-    if (!response.ok) {
+    if (response.status !== 200) {
       const error = new Error(responseData.message || "Failed to fetch!");
       throw error;
     }
@@ -28,34 +28,42 @@ export default {
     newRequest.jobId = payload.jobId;
     context.commit("addRequest", newRequest);
   },
-  async fetchRequests(context) {
-    console.log(context, "isi payload");
+  async fetchRequests({ commit, rootState }) {
+    try {
+      const response = await axios.get("http://localhost:3000/request", {
+        headers: { Authorization: `Bearer ${rootState.auth.token}` },
+      });
+      commit("setRequests", response.data);
+    } catch (error) {
+      // error handling
+    }
+  },
+  async updateRequestStatus({ commit, rootState }, payload) {
+    try {
+      commit("updateRequestStatus", payload);
+      const response = await axios.put(
+        `http://localhost:3000/request/${payload.requestId}`,
 
-    const jobId = context.rootGetters.userId;
-    const response = await fetch(`http://localhost:3000/request/${jobId}`, {
-      headers: {
-        Authorization: `Bearer ${context.rootState.auth.token}`,
-      },
-    });
-    const responseData = await response.json();
-    console.log(responseData, "data respon");
-    if (!response.ok) {
-      const error = new Error(responseData.message || "Failed to fetch!");
+        { status: payload.status },
+        {
+          headers: {
+            Authorization: `Bearer ${rootState.auth.token}`,
+          },
+        }
+      );
+
+     
+
+      return response.data;
+    } catch (error) {
+      // Tambahkan log error lebih detail
+      commit("updateRequestStatus", {
+        requestId: payload.requestId,
+        status:
+          state.requests.find((r) => r.id === payload.requestId)?.status ||
+          "pending",
+      });
       throw error;
     }
-
-    const requests = [];
-
-    for (const key in responseData) {
-      const request = {
-        id: key,
-        jobId: jobId,
-        message: responseData[key].message,
-        status: responseData[key].status,
-        title: responseData[key].Job?.title,
-      };
-      requests.push(request);
-    }
-    context.commit("setRequests", requests);
   },
 };

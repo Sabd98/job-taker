@@ -24,9 +24,9 @@ export const authMiddleware = async (req, res, next) => {
   }
 };
 
-export const adminMiddleware = (req, res, next) => {
-  if (req.user.role !== "admin") {
-    return res.status(403).json({ error: "Admin access required" });
+export const employerMiddleware = (req, res, next) => {
+  if (req.user.role !== "employer") {
+    return res.status(403).json({ error: "Employer access required" });
   }
   next();
 };

@@ -19,7 +19,6 @@
         >Apply</base-button
       >
       <base-button link :to="jobDetailsLink">View Detail</base-button>
-      {{ console.log(currentUser,'tes') }}
     </div>
   </li>
 </template>

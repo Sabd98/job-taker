@@ -14,14 +14,6 @@ export const router = createRouter({
     { path: "/", redirect: "/jobs" },
 
     { path: "/jobs", component: JobsList },
-
-    {
-      path: "/jobs/:id",
-      component: JobDetail,
-      props: true,
-      children: [{ path: "apply", component: ApplyJob }],
-    },
-
     {
       path: "/add",
       component: JobAdd,
@@ -29,6 +21,12 @@ export const router = createRouter({
         requiresAuth: true,
         requiresEmployer: true,
       },
+    },
+    {
+      path: "/jobs/:id",
+      component: JobDetail,
+      props: true,
+      children: [{ path: "apply", component: ApplyJob }],
     },
 
     { path: "/request", component: RequestReceived },
@@ -39,8 +37,8 @@ export const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = store.getters["auth/isAuthenticated"];
-  const isEmployer = store.getters["auth/isEmployer"];
+  const isAuthenticated = store.getters["isAuthenticated"];
+  const isEmployer = store.getters["isEmployer"];
 
   // Route requires authentication
   if (to.meta.requiresAuth && !isAuthenticated) {

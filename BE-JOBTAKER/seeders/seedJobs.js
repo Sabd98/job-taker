@@ -26,7 +26,7 @@ const seedJobs = async () => {
         minimumExperience: 1,
         minimumEducation: "Bachelor",
         desc: "deskripsi satu",
-        skills: "html",
+        skills: ["html", "css"],
         userId: employer.id,
       },
       {
@@ -38,12 +38,11 @@ const seedJobs = async () => {
         minimumExperience: 1,
         minimumEducation: "Bachelor",
         desc: "deskripsi 2",
-        skills: "javascript",
+        skills: ["javascript", "react"],
         userId: employer.id,
       },
     ];
     await Job.bulkCreate(jobsData);
-    console.log("Jobs seeded successfully!");
   } catch (error) {
     console.error("Error seeding jobs:", error);
   } finally {

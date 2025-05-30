@@ -32,7 +32,6 @@ const seedUsers = async () => {
     );
 
     await User.bulkCreate(hashedUsers);
-    console.log("Users seeded successfully with hashed passwords!");
   } catch (error) {
     console.error("Error seeding users:", error);
   } finally {

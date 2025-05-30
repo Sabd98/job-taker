@@ -15,15 +15,16 @@
           <request-item
             v-for="req in receivedRequests"
             :key="req.id"
+            :id="req.id"
             :title="req.title"
             :messages="req.message"
             :status="req.status"
+             @update-status="handleUpdateStatus"
           ></request-item>
         </ul>
+        
         <h3 v-else>You haven't received any request yet!</h3>
       </base-card>
-      {{ console.log(receivedRequests,'judul pt') }}
-
     </section>
   </div>
 </template>
@@ -62,6 +63,17 @@ export default {
       }
       this.isLoading = false;
     },
+    async handleUpdateStatus({ id, status }) {
+      try {
+        await this.$store.dispatch('requests/updateRequestStatus', {
+          requestId: id,
+          status: status
+        });
+      } catch (error) {
+        console.error('Failed to update status:', error);
+      }
+    },
+   
     handleError() {
       this.error = null;
     },

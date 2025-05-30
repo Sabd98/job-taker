@@ -28,13 +28,24 @@ export const Job = sequelize.define("Job", {
   },
   desc: DataTypes.TEXT,
   skills: {
-    type: DataTypes.ENUM("html", "css", "javascript"),
-    // defaultValue: "html",
+    type: DataTypes.JSON, // Ubah menjadi JSON
+    allowNull: true,
+    get() {
+      const rawValue = this.getDataValue("skills");
+      return rawValue ? JSON.parse(rawValue) : [];
+    },
+    set(value) {
+      this.setDataValue("skills", JSON.stringify(value));
+    },
   },
+  // skills: {
+  //   type: DataTypes.ENUM("html", "css", "javascript"),
+  //   // defaultValue: "html",
+  // },
   minimumExperience: DataTypes.INTEGER,
   minimumEducation: DataTypes.STRING,
   userId: {
-    type: DataTypes.UUID, 
+    type: DataTypes.UUID,
     allowNull: false,
   },
 });

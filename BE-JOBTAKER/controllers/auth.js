@@ -6,7 +6,6 @@ import { User } from "../models/User.js";
 export const authRouter = Router();
 
 authRouter.post("/register", async (req, res) => {
-  console.log(req.body);
   try {
     const { name, email, password, role } = req.body;
     if (!password || password.length < 6) {
@@ -29,11 +28,10 @@ authRouter.post("/register", async (req, res) => {
 });
 
 authRouter.post("/login", async (req, res) => {
-  console.log(req.body,'body payload');
   const { email, password } = req.body;
   const user = await User.findOne({ where: { email } });
-const role = user.role;
-const userId = user.id;
+  const role = user.role;
+  const userId = user.id;
 
   if (!user || !(await bcrypt.compare(password, user.password))) {
     return res.status(401).json({ error: "Invalid credentials" });
