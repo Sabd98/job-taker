@@ -84,47 +84,26 @@
         Minimum Education must not be empty.
       </p>
     </div>
-    <div class="form-control" :class="{ invalid: !skills.isValid }">
-      <h3>Skills of Expertise</h3>
-      <div>
-        <input
-          type="checkbox"
-          id="html"
-          value="html"
-          v-model="skills.val"
-          @blur="clearValidity('skills')"
-        />
-        <label for="html">HTML</label>
-      </div>
-      <div>
-        <input
-          type="checkbox"
-          id="css"
-          value="css"
-          v-model="skills.val"
-          @blur="clearValidity('skills')"
-        />
-        <label for="css">CSS</label>
-      </div>
-      <div>
-        <input
-          type="checkbox"
-          id="javascript"
-          value="javascript"
-          v-model="skills.val"
-          @blur="clearValidity('skills')"
-        />
-        <label for="javascript">Javascript</label>
-      </div>
+    <div class="form-control" :class="{ invalid: !minimumEducation.isValid }">
+      <job-filter
+        :class="{ invalid: !skills.isValid }"
+        @change-filter="applyFilters"
+      ></job-filter>
       <p v-if="!skills.isValid">At least one expertise must be selected.</p>
     </div>
+
     <p v-if="!formIsValid">Please fix the above errors and submit again.</p>
     <base-button>Add Job</base-button>
   </form>
 </template>
 
 <script>
+import JobFilter from "./JobFilter.vue";
+
 export default {
+  components: {
+    JobFilter,
+  },
   emits: ["save-data"],
   data() {
     return {
@@ -165,9 +144,17 @@ export default {
         isValid: true,
       },
       formIsValid: true,
+      activeFilters: {
+        search: "",
+        skills: [],
+      },
     };
   },
   methods: {
+    applyFilters(filters) {
+      this.skills.val = filters.skills;
+      this.skills.isValid = true;
+    },
     clearValidity(input) {
       this[input].isValid = true;
     },

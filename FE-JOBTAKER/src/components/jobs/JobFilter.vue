@@ -1,51 +1,52 @@
 <template>
-  <base-card>
-    <h2>Let&apos;s Apply your passionate Jobs!</h2>
-    <span class="filter-option"
-      ><input type="checkbox" id="frontend" checked @change="setFilter" />
-      <label for="frontend">Frontend</label>
-    </span>
-    <span class="filter-option"
-      ><input type="checkbox" id="backend" checked @change="setFilter" />
-      <label for="backend">Backend</label>
-    </span>
-    <span class="filter-option"
-      ><input type="checkbox" id="career" checked @change="setFilter" />
-      <label for="career">Career</label>
-    </span>
-  </base-card>
+    <section class="min-w-[15rem]">
+      <v-select
+        v-model="selectedSkills"
+        :items="skillOptions"
+        label="Filter by skills"
+        variant="outlined"
+        density="compact"
+        multiple
+        chips
+        hide-details
+        @update:modelValue="applyFilters"
+      >
+        <template v-slot:selection="{ item, index }">
+          <v-chip v-if="index < 2">
+            <span>{{ item.title }}</span>
+          </v-chip>
+          <span
+            v-if="index === 2"
+            class="text-grey text-caption align-self-center"
+          >
+            (+{{ selectedSkills.length - 2 }} others)
+          </span>
+        </template>
+      </v-select>
+    </section>
 </template>
 
 <script>
+import { mixinFiltering } from "../../mixins/filtering";
+
 export default {
-  emits: ['change-filter'],
-  data() {
-    return {
-      filters: {
-        frontend: true,
-        backend: true,
-        career: true,
-      },
-    };
-  },
-  methods: {
-    setFilter(e) {
-      const inputId = e.target.id;
-      const isActive = e.target.checked;
-      const updatedFilters = {
-        ...this.filters,
-        [inputId]: isActive,
-      };
-      this.filters = updatedFilters;
-      this.$emit('change-filter', updatedFilters);
-    },
-  },
+  mixins: [mixinFiltering],
 };
 </script>
 
 <style scoped>
-h2 {
-  margin: 0.5rem 0;
+.base-card {
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.v-text-field,
+.v-select {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  color: black;
 }
 
 .filter-option {

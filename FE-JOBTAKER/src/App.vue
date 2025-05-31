@@ -2,7 +2,7 @@
 <template>
   <main>
     <the-header title="Find a Job"></the-header>
-    <router-view v-slot="slotProps" class="container mx-auto">
+    <router-view v-slot="slotProps" class=" mx-auto">
       <transition name="route" mode="out-in">
       <component :is="slotProps.Component"></component>
       </transition>

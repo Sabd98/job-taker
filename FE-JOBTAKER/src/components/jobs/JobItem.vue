@@ -1,8 +1,16 @@
 <template>
   <li>
     <h3>{{ title }}</h3>
-    <h4>{{ currencyFormatter.format(salary) }}/month</h4>
-    <!-- <div>
+    <h4 class="flex">
+      <DollarSign :size="25" />&nbsp;{{
+        currencyFormatter.format(salary)
+      }}/month
+    </h4>
+
+    <strong class="flex">
+      <LucideBuilding :size="25" />&nbsp;{{ companyDetail }}</strong
+    >
+    <div>
       <base-badge
         v-for="skill in skills"
         :key="skill"
@@ -10,11 +18,8 @@
         :title="skill"
         >{{ skill }}</base-badge
       >
-    </div> -->
-    <div>
-      <strong>{{ companyDetail }}</strong>
     </div>
-    <div class="actions" v-show="currentUser.role">
+    <div class="actions pt-3" v-show="currentUser.role">
       <base-button v-if="!isEmployer" link mode="outline" :to="jobApplyLink"
         >Apply</base-button
       >
@@ -24,19 +29,21 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex/dist/vuex';
-import { mixinCurrency } from '../../mixins/currencyFormatter';
+import { mapGetters } from "vuex/dist/vuex";
+import { mixinCurrency } from "../../mixins/currencyFormatter";
+import { DollarSign, LucideBuilding } from "lucide-vue-next";
 
 export default {
-  props: ["id", "title", "company","location", "salary", "skills"],
-  mixins:[mixinCurrency],
+  props: ["id", "title", "company", "location", "salary", "skills"],
+  components: {
+    DollarSign,
+    LucideBuilding,
+  },
+  mixins: [mixinCurrency],
   computed: {
-    ...mapGetters([
-      'isEmployer',
-      'currentUser'
-    ]),
+    ...mapGetters(["isEmployer", "currentUser"]),
     companyDetail() {
-      return this.company + '-' + this.location;
+      return this.company + "-" + this.location;
     },
     jobApplyLink() {
       return this.$route.path + "/" + this.id + "/apply";
@@ -52,6 +59,7 @@ export default {
 li {
   margin: 1rem 0;
   border: 1px solid #1900ff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   border-radius: 12px;
   padding: 1rem;
 }

@@ -3,20 +3,20 @@
     <section>
       <base-card>
         <h1 class="mb-2 text-4xl font-bold">{{ title }}</h1>
-        <h1>{{ companyDetail }}</h1>
+        <h1  class=" flex mb-2 text-2xl font-bold"> <LucideBuilding :size="28" />&nbsp;{{ companyDetail }}</h1>
 
-        <ul class="mb-3">
-          <li>{{ currencyFormatter.format(salary) }}/month</li>
-          <li>{{ category }}/hour</li>
-          <li>{{ minimumExperience }} years</li>
-          <li>{{ minimumEducation }} years</li>
+        <ul class="my-3 space-y-3">
+          <li class="flex"> <DollarSign :size="25" />&nbsp;{{ currencyFormatter.format(salary) }}/month</li>
+          <li class="flex"><Layers :size="25" />&nbsp;{{ category }}</li>
+          <li class="flex"><CalendarRange :size="25" />&nbsp;{{ minimumExperience }} years</li>
+          <li class="flex"><BookOpenText :size="25" />&nbsp;{{ minimumEducation }}</li>
         </ul>
         <p class="indent-10">{{ description }}</p>
       </base-card>
     </section>
     <section  v-if="!isEmployer && currentUser.role" >
       <base-card>
-        <header>
+        <header class="space-y-2">
           <h2>Interested? Reach out now!</h2>
           <base-button link :to="applyLink">Apply</base-button>
         </header>
@@ -39,9 +39,17 @@
 <script>
 import { mapGetters } from "vuex/dist/vuex";
 import { mixinCurrency } from "../../mixins/currencyFormatter";
+import { DollarSign, LucideBuilding,Layers, CalendarRange, BookOpenText } from "lucide-vue-next";
 
 export default {
   props: ["id"],
+  components: {
+    DollarSign,
+    LucideBuilding,
+    Layers,
+    CalendarRange,
+    BookOpenText,
+  },
   mixins: [mixinCurrency],
   data() {
     return {
